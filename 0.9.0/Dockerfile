@@ -5,8 +5,7 @@ FROM python:3.7.3-alpine
 LABEL version="1.0" maintainer="vsc55@cerebelum.net" description="Docker webscrapbook"
 
 ARG wsb_ver
-ENV wsb_ver=${wsb_ver}
-# ENV wsb_ver=${wsb_ver:-0.9.0}
+ENV wsb_ver=${wsb_ver:-0.9.0}
 
 RUN apk upgrade --no-cache; \
 	apk add --no-cache --virtual .build-deps gcc libc-dev libxslt-dev; \
@@ -31,5 +30,3 @@ HEALTHCHECK --interval=1m --timeout=15s --start-period=20s --retries=4  CMD curl
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["start"]
-
-#CMD ["sh", "/run_wsb.sh"]
