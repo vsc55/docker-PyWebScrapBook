@@ -1,11 +1,14 @@
-version: '1'
+version: '2'
 
 services:
-  build:
-    image: vsc55/webscrapbook:latest
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: webscrapbook_test
     ports:
       - 8080:8080
     volumes:
-      - ./:/data
+        - ./:/data
     command: build
     
