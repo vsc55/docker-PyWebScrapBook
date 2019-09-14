@@ -1,6 +1,8 @@
 # docker-webscrapbook
 
-Docker for the remote server of the firefox extension webscrapbook. https://pypi.org/project/webscrapbook/
+Docker for the remote server of the firefox extension webscrapbook. 
+* Server Web: https://pypi.org/project/webscrapbook/
+* Extensino Firefox: https://github.com/danny0838/webscrapbook
 
 
 ### Create Container:
