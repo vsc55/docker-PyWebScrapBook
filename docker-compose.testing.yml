@@ -1,0 +1,11 @@
+version: '1'
+
+services:
+  build:
+    image: vsc55/webscrapbook:latest
+    ports:
+      - 8080:8080
+    volumes:
+      - ./:/data
+    command: build
+    
