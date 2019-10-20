@@ -3,7 +3,7 @@ FROM python:3.7.3-alpine
 LABEL version="1.0" maintainer="vsc55@cerebelum.net" description="Docker webscrapbook"
 
 ARG wsb_ver
-ENV wsb_ver=${wsb_ver}
+ENV wsb_ver=${wsb_ver:-0.9.1}
 
 RUN apk upgrade --no-cache; \
 	apk add --no-cache --virtual .build-deps gcc libc-dev libxslt-dev; \
@@ -18,6 +18,8 @@ RUN apk upgrade --no-cache; \
 WORKDIR /
 COPY --chown=root:root ["entrypoint.sh", "run_wsb.sh", "./"]
 
+RUN chmod +x /*.sh
+
 ENV HTTP_PORT=8080 MODE_RUN=production WSB_VERSION=${wsb_ver:-latest}
 
 VOLUME ["/data"]
@@ -26,4 +28,5 @@ EXPOSE ${HTTP_PORT}/tcp
 HEALTHCHECK --interval=1m --timeout=15s --start-period=20s --retries=4  CMD curl -sf http://localhost:${HTTP_PORT} > /dev/null || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
+
 CMD ["start"]
