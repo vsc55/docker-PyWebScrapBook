@@ -18,6 +18,7 @@ RUN apk upgrade --no-cache; \
 WORKDIR /
 COPY --chown=root:root ["entrypoint.sh", "run_wsb.sh", "./"]
 
+#Fix, hub.docker.com auto buils
 RUN chmod +x /*.sh
 
 ENV HTTP_PORT=8080 MODE_RUN=production WSB_VERSION=${wsb_ver:-latest}
