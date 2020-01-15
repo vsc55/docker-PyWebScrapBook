@@ -1,6 +1,8 @@
-www:
-  image: vsc55/webscrapbook:latest
-  ports:
-    - "8080:8080"
-  volumes:
-    - /volume1/docker/webscrapbook_data:/data
+version: "2"
+services:
+  webapp:
+    image: vsc55/webscrapbook:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - /volume1/docker/webscrapbook_data:/data
