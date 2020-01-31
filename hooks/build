@@ -1,2 +1,7 @@
 #!/bin/bash
-docker build --squash --network=host -t $IMAGE_NAME . --build-arg wsb_ver=$SOURCE_BRANCH
+# hooks/build
+# https://docs.docker.com/docker-cloud/builds/advanced/
+
+docker build \
+    --build-arg wsb_ver=$SOURCE_BRANCH \
+    -t $IMAGE_NAME .
