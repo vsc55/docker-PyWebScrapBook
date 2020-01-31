@@ -1,0 +1,2 @@
+#!/bin/bash
+docker build --squash --network=host -t $IMAGE_NAME . --build-arg wsb_ver=$SOURCE_BRANCH
