@@ -2,6 +2,10 @@
 # hooks/build
 # https://docs.docker.com/docker-cloud/builds/advanced/
 
+if [ "$SOURCE_BRANCH" == "master" ]; then
+    SOURCE_BRANCH=latest
+fi
+
 # $IMAGE_NAME var is injected into the build so the tag is correct.
 echo "[***] Build hook running"
 echo "[***] - Version $SOURCE_BRANCH"
