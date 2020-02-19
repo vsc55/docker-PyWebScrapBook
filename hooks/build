@@ -8,10 +8,10 @@ echo "[***] - Version $SOURCE_BRANCH"
 
 
 if [ "$SOURCE_BRANCH" == "master" ]; then
-    docker build 
+    docker build \
 		-t $IMAGE_NAME .
 else
-	docker build 
+	docker build \
 		--build-arg wsb_ver=$SOURCE_BRANCH \
 		-t $IMAGE_NAME .
 fi
