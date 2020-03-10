@@ -9,10 +9,10 @@ Docker for the remote server of the firefox extension webscrapbook.
 
 ### Create Container:
 ```
-docker run -v /dokers/PyWebScrapBook_data:/data -p 8080:8080/tcp vsc55/PyWebScrapBook:latest
+docker run -v /dokers/PyWebScrapBook_data:/data -p 8080:8080/tcp vsc55/webscrapbook:latest
 ```
 or
 ```
-docker create --name PyWebScrapBook -v /dokers/PyWebScrapBook_data:/data -p 8080:8080/tcp vsc55/PyWebScrapBook:latest
+docker create --name PyWebScrapBook -v /dokers/PyWebScrapBook_data:/data -p 8080:8080/tcp vsc55/webscrapbook:latest
 docker container start PyWebScrapBook
 ```
