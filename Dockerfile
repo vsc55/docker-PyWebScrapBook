@@ -1,12 +1,12 @@
 FROM python:3.7.3-alpine
 
-LABEL version="1.0" maintainer="vsc55@cerebelum.net" description="Docker webscrapbook"
+LABEL version="1.0" maintainer="vsc55@cerebelum.net" description="Docker PyWebScrapBook"
 
 ARG wsb_ver
 ENV wsb_ver=${wsb_ver}
 
 RUN apk upgrade --no-cache; \
-	apk add --no-cache --virtual .build-deps gcc libc-dev libxslt-dev; \
+	apk add --no-cache --virtual .build-deps gcc libc-dev openssl-dev libffi-dev libxslt-dev; \
     apk add --no-cache bash libxslt curl; \
 	pip install --no-cache-dir --upgrade pip; \
 	if [ "$wsb_ver" = "" ] ; \
