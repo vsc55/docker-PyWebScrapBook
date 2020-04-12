@@ -1,6 +1,6 @@
-FROM python:3.7.3-alpine
+FROM python:3.7.7-alpine
 
-LABEL version="1.0" maintainer="vsc55@cerebelum.net" description="Docker PyWebScrapBook"
+LABEL version="1.1" maintainer="vsc55@cerebelum.net" description="Docker PyWebScrapBook"
 
 ARG wsb_ver
 ENV wsb_ver=${wsb_ver}
@@ -16,7 +16,7 @@ RUN apk upgrade --no-cache; \
 	apk del .build-deps;
 
 WORKDIR /
-COPY --chown=root:root ["entrypoint.sh", "run_wsb.sh", "./"]
+COPY --chown=root:root ["entrypoint.sh", "run_wsb.sh", "health_check.sh", "./"]
 
 #Fix, hub.docker.com auto buils
 RUN chmod +x /*.sh
@@ -26,7 +26,7 @@ ENV HTTP_PORT=8080 MODE_RUN=production WSB_VERSION=${wsb_ver:-latest}
 VOLUME ["/data"]
 EXPOSE ${HTTP_PORT}/tcp
 
-HEALTHCHECK --interval=1m --timeout=15s --start-period=20s --retries=4  CMD curl -sf http://localhost:${HTTP_PORT} > /dev/null || exit 1
+HEALTHCHECK --interval=5s --timeout=3s --start-period=20s CMD /health_check.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 
