@@ -10,9 +10,9 @@ RUN apk upgrade --no-cache; \
     apk add --no-cache bash libxslt curl; \
 	pip install --no-cache-dir --upgrade pip; \
 	if [ "$wsb_ver" = "" -o "$wsb_ver" = "dev" ] ; \
-	then; \
+	then \
 		pip install --no-cache-dir webscrapbook; \
-	else; \
+	else \
 		pip install --no-cache-dir webscrapbook==${wsb_ver}; \
 	fi; \
 	apk del .build-deps;
