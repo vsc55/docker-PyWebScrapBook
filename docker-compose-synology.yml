@@ -4,5 +4,9 @@ services:
     image: vsc55/webscrapbook:latest
     ports:
       - "8080:8080"
+    environment:
+      - HTTP_PORT=8080
+      - MODE_RUN=production
+      - wsb_ver=latest
     volumes:
       - /volume1/docker/webscrapbook_data:/data
