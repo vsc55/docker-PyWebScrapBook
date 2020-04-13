@@ -9,9 +9,11 @@ RUN apk upgrade --no-cache; \
 	apk add --no-cache --virtual .build-deps gcc libc-dev openssl-dev libffi-dev libxslt-dev; \
     apk add --no-cache bash libxslt curl; \
 	pip install --no-cache-dir --upgrade pip; \
-	if [ "$wsb_ver" = "" ] ; \
-	then pip install --no-cache-dir webscrapbook; \ 
-	else pip install --no-cache-dir webscrapbook==${wsb_ver}; \
+	if [[ "$wsb_ver" == "" || "$wsb_ver" == "dev" ]] ; \
+	then; \
+		pip install --no-cache-dir webscrapbook; \
+	else; \
+		pip install --no-cache-dir webscrapbook==${wsb_ver}; \
 	fi; \
 	apk del .build-deps;
 
