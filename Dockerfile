@@ -15,7 +15,8 @@ RUN apk upgrade --no-cache; \
 	else \
 		pip install --no-cache-dir webscrapbook==${wsb_ver}; \
 	fi; \
-	apk del .build-deps;
+	apk del .build-deps; \
+	apk cache clean;
 
 WORKDIR /
 COPY --chown=root:root ["entrypoint.sh", "run_wsb.sh", "health_check.sh", "./"]
