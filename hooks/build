@@ -4,7 +4,9 @@
 
 # $IMAGE_NAME var is injected into the build so the tag is correct.
 echo "[***] Build hook running"
-echo "[***] - Version $SOURCE_BRANCH"
+echo "[***] - DokerRepo : $DOCKER_REPO"
+echo "[***] - Version   : $SOURCE_BRANCH"
+echo "[***] - ImageName : $IMAGE_NAME"
 
 
 if [ "$SOURCE_BRANCH" == "master" ]; then
