@@ -28,7 +28,7 @@ ENV HTTP_PORT=8080 MODE_RUN=production
 VOLUME ["/data"]
 EXPOSE ${HTTP_PORT}/tcp
 
-HEALTHCHECK --interval=5s --timeout=3s --start-period=20s CMD /health_check.sh
+HEALTHCHECK --interval=5m --timeout=10s --start-period=30s CMD /health_check.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["start"]
