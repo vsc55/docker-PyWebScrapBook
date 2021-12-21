@@ -1,4 +1,4 @@
-FROM python:3.7.7-alpine
+FROM --platform=$BUILDPLATFORM python:3.10.1-alpine
 
 LABEL version="1.1" maintainer="vsc55@cerebelum.net" description="Docker PyWebScrapBook"
 
