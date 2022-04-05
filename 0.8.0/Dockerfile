@@ -1,6 +1,6 @@
 # https://pypi.org/project/webscrapbook/
 
-FROM python:3.7.3-alpine
+FROM python:3.7.13-alpine
 
 LABEL version="1.0" maintainer="vsc55@cerebelum.net" description="Docker webscrapbook"
 
