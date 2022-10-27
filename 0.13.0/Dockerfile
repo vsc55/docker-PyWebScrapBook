@@ -1,4 +1,4 @@
-FROM python:3.11.0a7-alpine
+FROM python:3.12.0a1-alpine
 
 LABEL version="1.0" maintainer="vsc55@cerebelum.net" description="Docker webscrapbook"
 
