@@ -17,7 +17,9 @@ docker run -v /dokers/PyWebScrapBook_data:/data -p 8080:8080/tcp vsc55/webscrapb
 ```
 
 ## Version PyWebScrapBook and Python:
-* 1.1.0 to last version
+* 2.5.1 to last version
+  * python:3.13.1-alpine
+* 1.1.0 to 2.5.0
   * python:3.10.1-alpine
 * 0.15.0 to 1.0.0
   * python:3.7.7-alpine
