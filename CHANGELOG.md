@@ -25,8 +25,9 @@ Targets **WebScrapBook 2.9.0** on **python:3.14-alpine**.
 - Documented the environment variables in the `Dockerfile` and both
   `docker-compose*` examples.
 - Expanded the `README.md`: data layout, extension usage, Docker Compose
-  example, configuration table, image tags, update steps, and the
-  version/arch tables aligned with the CI workflow.
+  example, configuration table, subpath hosting (reverse proxy +
+  `WSB_ALLOWED_X_PREFIX`), image tags, update steps, and the version/arch
+  tables aligned with the CI workflow.
 - CI: `upstream-release` workflow that polls PyPI daily and, when a new
   WebScrapBook version appears, creates the matching tag (which triggers the
   `ci` build & publish). Requires a `TOKEN_WEBSCRAPBOOK` PAT secret so the tag
@@ -45,6 +46,8 @@ Targets **WebScrapBook 2.9.0** on **python:3.14-alpine**.
   to `master`, pull request and manual run; all `docker/*` actions were updated
   to their current majors. `publish` builds and pushes the multi-arch image to
   Docker Hub only on a version tag and only after `test` passes.
+- CI: bumped `actions/checkout` to v5 (Node.js 24) to clear the Node.js 20
+  deprecation warning.
 
 ### Fixed
 

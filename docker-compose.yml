@@ -16,10 +16,12 @@ services:
       #- WSB_AUTH_USER=admin
       #- WSB_AUTH_PASSWORD=changeme
       #- WSB_AUTH_PERMISSION=all        # all | read
-      # Behind a reverse proxy (number of trusted header values):
+      # Behind a reverse proxy (number of trusted header values). Set
+      # WSB_ALLOWED_X_PREFIX and send X-Forwarded-Prefix to host on a subpath:
       #- WSB_ALLOWED_X_FOR=1
       #- WSB_ALLOWED_X_PROTO=1
       #- WSB_ALLOWED_X_HOST=1
+      #- WSB_ALLOWED_X_PREFIX=1
       # HTTPS (cert/key paths are relative to /data):
       #- WSB_SSL_ON=true
       #- WSB_SSL_CERT=.wsb/server.crt

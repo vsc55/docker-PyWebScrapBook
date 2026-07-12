@@ -92,6 +92,22 @@ these keys). Any other key can still be edited by hand in `config.ini`.
 > requires the `webscrapbook[adhoc_ssl]` extra in the image. For real usage,
 > mount your cert/key under `/data` (or terminate TLS at a reverse proxy).
 
+## Hosting on a subpath:
+To serve PyWebScrapBook under a subpath (e.g. `https://example.com/scrapbook/`),
+set `WSB_ALLOWED_X_PREFIX=1` and make your reverse proxy forward the
+`X-Forwarded-Prefix` header. Example with nginx:
+```nginx
+location /scrapbook/ {
+    proxy_pass http://127.0.0.1:8080/;
+    proxy_set_header X-Forwarded-Prefix /scrapbook;
+    proxy_set_header X-Forwarded-Proto  $scheme;
+    proxy_set_header X-Forwarded-Host   $host;
+}
+```
+The app (via `ProxyFix`) then builds its URLs with the `/scrapbook` prefix, so
+no image changes are needed. Set the matching `WSB_ALLOWED_X_*` variables for
+any other forwarded headers your proxy sends.
+
 ## Image tags:
 * `latest` — the most recent published release.
 * `X.Y.Z` — a specific WebScrapBook version (e.g. `2.9.0`), recommended for
