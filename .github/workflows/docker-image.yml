@@ -2,37 +2,103 @@ name: ci
 
 on:
   push:
-    # branches:
-    #   - 'master'
+    branches:
+      - master
     tags:
       - '*.*.*'
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-
-  docker:
+  # Build a single-arch image and make sure the container actually boots and
+  # serves before anything is published.
+  test:
+    name: Build & smoke test
     runs-on: ubuntu-latest
-
     steps:
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up Docker Buildx
-      id: build
-      uses: docker/setup-buildx-action@v1
-      
-    - name: Login to DockerHub
-      uses: docker/login-action@v1 
-      with:
-        username: ${{ github.repository_owner }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
-    - name: Build and push
-      id: docker_build
-      uses: docker/build-push-action@v2
-      with:
-        push: true
-        platforms: linux/386, linux/amd64, linux/arm64/v8, linux/arm/v7, linux/arm/v6
-        tags: |
-          ${{ github.repository_owner }}/webscrapbook:${{ github.ref_name }}
-          ${{ github.repository_owner }}/webscrapbook:latest
-        build_args: wsb_ver=${{ github.ref_name }}
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build image (amd64)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          load: true
+          platforms: linux/amd64
+          tags: webscrapbook:test
+          build-args: |
+            wsb_ver=${{ github.ref_type == 'tag' && github.ref_name || '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Smoke test (service starts and serves)
+        run: |
+          set -e
+          docker run -d --name wsb -p 8080:8080 webscrapbook:test
+
+          echo "Waiting for the server to become ready..."
+          for _ in $(seq 1 30); do
+            if curl -fsS http://localhost:8080/ >/dev/null 2>&1; then
+              ready=1
+              break
+            fi
+            sleep 2
+          done
+
+          docker logs wsb || true
+          if [ "${ready:-0}" != "1" ]; then
+            echo "::error::server did not become ready"
+            exit 1
+          fi
+
+          ver="$(docker exec wsb wsb --version | awk '{print $2}')"
+          echo "Installed webscrapbook $ver"
+          if [ "${{ github.ref_type }}" = "tag" ] && [ "$ver" != "${{ github.ref_name }}" ]; then
+            echo "::error::version mismatch: image has $ver but tag is ${{ github.ref_name }}"
+            exit 1
+          fi
+
+          docker rm -f wsb
+
+  # Publish the multi-arch image, only for version tags and only if the smoke
+  # test above succeeded.
+  publish:
+    name: Build & push (multi-arch)
+    needs: test
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          platforms: linux/386,linux/amd64,linux/arm64/v8,linux/arm/v7,linux/arm/v6
+          tags: |
+            ${{ github.repository_owner }}/webscrapbook:${{ github.ref_name }}
+            ${{ github.repository_owner }}/webscrapbook:latest
+          build-args: |
+            wsb_ver=${{ github.ref_name }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

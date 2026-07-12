@@ -2,11 +2,30 @@ version: "2"
 services:
   webapp:
     image: vsc55/webscrapbook:latest
+    # To build locally and pin a WebScrapBook version, comment out "image:"
+    # above and uncomment the block below:
+    #build:
+    #  context: .
+    #  args:
+    #    wsb_ver: 2.9.0   # empty or "dev" installs the latest release from PyPI
     ports:
       - "8080:8080"
     environment:
       - HTTP_PORT=8080
-      - MODE_RUN=production
-      - wsb_ver=latest
+      # Authentication (uncomment to require login):
+      #- WSB_AUTH_USER=admin
+      #- WSB_AUTH_PASSWORD=changeme
+      #- WSB_AUTH_PERMISSION=all        # all | read
+      # Behind a reverse proxy (number of trusted header values):
+      #- WSB_ALLOWED_X_FOR=1
+      #- WSB_ALLOWED_X_PROTO=1
+      #- WSB_ALLOWED_X_HOST=1
+      # HTTPS (cert/key paths are relative to /data):
+      #- WSB_SSL_ON=true
+      #- WSB_SSL_CERT=.wsb/server.crt
+      #- WSB_SSL_KEY=.wsb/server.key
+      # Appearance:
+      #- WSB_APP_NAME=My ScrapBook
+      #- WSB_LOCALE=en
     volumes:
       - ./webscrapbook_data:/data

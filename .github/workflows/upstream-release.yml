@@ -1,0 +1,56 @@
+name: upstream-release
+
+# Polls PyPI for new WebScrapBook releases and, when one appears, creates the
+# matching tag in this repo. That tag push triggers the `ci` workflow, which
+# builds and publishes the image.
+#
+# IMPORTANT: the tag must be pushed with a Personal Access Token (secret
+# TOKEN_WEBSCRAPBOOK), because a tag created with the default GITHUB_TOKEN does
+# NOT trigger other workflows. The PAT needs `contents: write` (fine-grained)
+# or `repo` (classic) scope on this repository.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # daily at 06:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  check:
+    name: Tag new upstream release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TOKEN_WEBSCRAPBOOK }}
+
+      - name: Resolve latest WebScrapBook version
+        id: upstream
+        run: |
+          ver="$(curl -fsSL https://pypi.org/pypi/webscrapbook/json | jq -r '.info.version')"
+          if [ -z "$ver" ] || [ "$ver" = "null" ]; then
+            echo "::error::could not resolve the upstream version from PyPI"
+            exit 1
+          fi
+          echo "Latest WebScrapBook on PyPI: $ver"
+          echo "version=$ver" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag if it does not exist
+        env:
+          VER: ${{ steps.upstream.outputs.version }}
+          ACTOR: ${{ github.actor }}
+          ACTOR_ID: ${{ github.actor_id }}
+        run: |
+          if git rev-parse -q --verify "refs/tags/$VER" >/dev/null; then
+            echo "Tag $VER already exists — nothing to do."
+            exit 0
+          fi
+          git config user.name  "$ACTOR"
+          git config user.email "${ACTOR_ID}+${ACTOR}@users.noreply.github.com"
+          git tag -a "$VER" -m "WebScrapBook $VER"
+          git push origin "$VER"
+          echo "Created and pushed tag $VER"
