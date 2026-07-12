@@ -8,6 +8,7 @@ Docker image for the backend server of the **WebScrapBook** browser extension
 * Server (GitHub): https://github.com/danny0838/PyWebScrapBook
 * Browser extension: https://github.com/danny0838/webscrapbook
 * Docker Hub: https://hub.docker.com/r/vsc55/webscrapbook
+* GitHub Container Registry: `ghcr.io/vsc55/webscrapbook`
 
 ## Create Container:
 ```
@@ -109,9 +110,13 @@ no image changes are needed. Set the matching `WSB_ALLOWED_X_*` variables for
 any other forwarded headers your proxy sends.
 
 ## Image tags:
+Released images are published to both Docker Hub (`vsc55/webscrapbook`) and GHCR
+(`ghcr.io/vsc55/webscrapbook`):
 * `latest` — the most recent published release.
 * `X.Y.Z` — a specific WebScrapBook version (e.g. `2.9.0`), recommended for
   reproducible deployments.
+* `test` — **GHCR only**; a rolling build from the latest `master` commit
+  (amd64), for testing. Not for production.
 
 ## Update:
 ```

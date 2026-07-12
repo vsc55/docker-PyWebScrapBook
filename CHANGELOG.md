@@ -48,6 +48,12 @@ Targets **WebScrapBook 2.9.0** on **python:3.14-alpine**.
   Docker Hub only on a version tag and only after `test` passes.
 - CI: bumped `actions/checkout` to v5 (Node.js 24) to clear the Node.js 20
   deprecation warning.
+- CI: the `publish` job now also pushes to GitHub Container Registry
+  (`ghcr.io/<owner>/webscrapbook`) alongside Docker Hub, using the built-in
+  `GITHUB_TOKEN` (no extra secret).
+- CI: every push to `master` publishes a rolling `ghcr.io/<owner>/webscrapbook:test`
+  image (amd64), after the smoke test passes. Docker Hub still receives tagged
+  releases only.
 
 ### Fixed
 
