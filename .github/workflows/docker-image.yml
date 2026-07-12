@@ -149,3 +149,105 @@ jobs:
             wsb_ver=${{ github.ref_name }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # Create a GitHub Release for the tag. The tag is the product (WebScrapBook)
+  # version; the image keeps its own version in CHANGELOG.md. The notes always
+  # include the upstream WebScrapBook changelog, plus this image's latest
+  # changelog entry ONLY when CHANGELOG.md changed since the previous tag (i.e.
+  # the image itself changed for this release).
+  release:
+    name: GitHub Release
+    needs: publish
+    if: github.ref_type == 'tag'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # create releases
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # need history and tags to diff against the previous tag
+
+      - name: Build release notes
+        env:
+          TAG: ${{ github.ref_name }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          # Upstream WebScrapBook changelog (best-effort; a link is used if it
+          # cannot be fetched or the version is not found there).
+          curl -fsSL https://raw.githubusercontent.com/danny0838/PyWebScrapBook/master/CHANGELOG.md -o upstream.md || true
+
+          # Did the image change for this release? -> CHANGELOG.md differs from
+          # the previous tag (or this is the first tag).
+          prev="$(git describe --tags --abbrev=0 "${TAG}^" 2>/dev/null || true)"
+          if [ -z "$prev" ] || ! git diff --quiet "$prev" "$TAG" -- CHANGELOG.md; then
+            image_changed=1
+          else
+            image_changed=0
+          fi
+          echo "Previous tag: ${prev:-<none>} | image_changed=$image_changed"
+
+          python3 - "$TAG" "$OWNER" "$image_changed" > notes.md <<'PY'
+          import re, sys, pathlib
+
+          tag, owner, image_changed = sys.argv[1], sys.argv[2], sys.argv[3] == '1'
+
+          def section_body(text, tag):
+              """Bullet body of the '## [tag]' section, or None."""
+              parts = [s for s in re.split(r'(?m)^(?=## \[)', text) if s.startswith('## [')]
+              sec = next((s for s in parts if re.match(rf'## \[{re.escape(tag)}\]', s)), None)
+              return sec.split('\n', 1)[1].strip() if sec and '\n' in sec else None
+
+          def top_section(text):
+              """(version, body) of the most recent '## [x]' section, or (None, None)."""
+              parts = [s for s in re.split(r'(?m)^(?=## \[)', text) if s.startswith('## [')]
+              if not parts:
+                  return None, None
+              m = re.match(r'## \[([^\]]+)\]', parts[0])
+              ver = m.group(1) if m else '?'
+              body = parts[0].split('\n', 1)[1].strip() if '\n' in parts[0] else ''
+              return ver, body
+
+          def read(path):
+              try:
+                  return pathlib.Path(path).read_text(encoding='utf-8')
+              except OSError:
+                  return ''
+
+          out = [
+              f"Docker image for **WebScrapBook {tag}** "
+              f"(https://pypi.org/project/webscrapbook/{tag}/).",
+              "",
+              "## Pull",
+              "```",
+              f"docker pull {owner}/webscrapbook:{tag}            # Docker Hub",
+              f"docker pull ghcr.io/{owner}/webscrapbook:{tag}    # GHCR",
+              "```",
+              "",
+              f"## WebScrapBook {tag}",
+          ]
+          upstream = section_body(read('upstream.md'), tag)
+          out.append(upstream if upstream else
+                     "See https://github.com/danny0838/PyWebScrapBook/blob/master/CHANGELOG.md")
+
+          # Image's own changelog: only when the image changed for this release.
+          if image_changed:
+              ver, body = top_section(read('CHANGELOG.md'))
+              if body:
+                  out += ["", f"## Image changes (v{ver})", body]
+
+          sys.stdout.write("\n".join(out) + "\n")
+          PY
+
+          echo "---- notes.md ----"; cat notes.md
+
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release edit "$TAG" --title "$TAG" --notes-file notes.md
+          else
+            gh release create "$TAG" --title "$TAG" --notes-file notes.md
+          fi

@@ -1,5 +1,21 @@
 # docker-PyWebScrapBook
 
+[![CI](https://github.com/vsc55/docker-PyWebScrapBook/actions/workflows/docker-image.yml/badge.svg)](https://github.com/vsc55/docker-PyWebScrapBook/actions/workflows/docker-image.yml)
+[![Release](https://img.shields.io/github/v/release/vsc55/docker-PyWebScrapBook)](https://github.com/vsc55/docker-PyWebScrapBook/releases)
+[![Docker Hub](https://img.shields.io/docker/v/vsc55/webscrapbook?label=docker%20hub&sort=semver)](https://hub.docker.com/r/vsc55/webscrapbook)
+[![Docker Pulls](https://img.shields.io/docker/pulls/vsc55/webscrapbook)](https://hub.docker.com/r/vsc55/webscrapbook)
+![Image Size](https://img.shields.io/docker/image-size/vsc55/webscrapbook/latest)
+![Python](https://img.shields.io/badge/python-3.14--alpine-3776AB)
+![Platform](https://img.shields.io/badge/platform-amd64%20%7C%20arm64%20%7C%20arm%20%7C%20386-0078D6)
+[![License](https://img.shields.io/github/license/vsc55/docker-PyWebScrapBook)](LICENSE)
+![Last Commit](https://img.shields.io/github/last-commit/vsc55/docker-PyWebScrapBook)
+![Code Size](https://img.shields.io/github/languages/code-size/vsc55/docker-PyWebScrapBook)
+![Top Language](https://img.shields.io/github/languages/top/vsc55/docker-PyWebScrapBook)
+![Maintenance](https://img.shields.io/maintenance/yes/2026)
+![Author](https://img.shields.io/badge/author-VSC55-lightgrey)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/vsc55/docker-PyWebScrapBook)
+[![GitHub Stars](https://img.shields.io/github/stars/vsc55/docker-PyWebScrapBook?style=social)](https://github.com/vsc55/docker-PyWebScrapBook/stargazers)
+
 Docker image for the backend server of the **WebScrapBook** browser extension
 (a tool to capture and organize web pages), packaging
 [PyWebScrapBook](https://github.com/danny0838/PyWebScrapBook) on Alpine.
@@ -9,6 +25,7 @@ Docker image for the backend server of the **WebScrapBook** browser extension
 * Browser extension: https://github.com/danny0838/webscrapbook
 * Docker Hub: https://hub.docker.com/r/vsc55/webscrapbook
 * GitHub Container Registry: `ghcr.io/vsc55/webscrapbook`
+* Releases: https://github.com/vsc55/docker-PyWebScrapBook/releases
 
 ## Create Container:
 ```
@@ -118,6 +135,18 @@ Released images are published to both Docker Hub (`vsc55/webscrapbook`) and GHCR
 * `test` — **GHCR only**; a rolling build from the latest `master` commit
   (amd64), for testing. Not for production.
 
+## Versioning & releases:
+This project has two independent versions:
+* **Product** — the WebScrapBook version, used as the image tag (e.g. `2.9.0`).
+* **Image** — this repository's own version (see [CHANGELOG.md](CHANGELOG.md)),
+  bumped only when the Docker setup itself changes.
+
+Pushing a version tag builds and publishes the image (Docker Hub + GHCR) and
+creates a [GitHub Release](https://github.com/vsc55/docker-PyWebScrapBook/releases)
+with `docker pull` instructions and the WebScrapBook changelog for that version.
+Image-level changes are listed in the release only when they happened for that
+version.
+
 ## Update:
 ```
 docker compose pull && docker compose up -d
@@ -151,3 +180,13 @@ docker rm -f PyWebScrapBook
 ## Links:
 * Changelog: [CHANGELOG.md](CHANGELOG.md)
 * License: [LICENSE](LICENSE)
+
+## Star History
+
+<a href="https://www.star-history.com/?repos=vsc55%2Fdocker-PyWebScrapBook&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=vsc55/docker-PyWebScrapBook&type=date&theme=dark&legend=top-left&sealed_token=ckw3Qetu_FDo4yK_r7ARz35VaJ1SYXUk4kxaSC8_hU6Up3oJfduWGI0BJK-6efLlJ5d_XpPo8fTU9I2cfA9xYZEiiQ3OkSvy5k_nq6PkJ_Yhyri0MnKeG9SCg6wzp3LU4PeuHlY3QB0bcJd-D4zNPGb3AALFJHTOU0DHbEwT0BPFZQgh3uvXMtWI25Za" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=vsc55/docker-PyWebScrapBook&type=date&legend=top-left&sealed_token=ckw3Qetu_FDo4yK_r7ARz35VaJ1SYXUk4kxaSC8_hU6Up3oJfduWGI0BJK-6efLlJ5d_XpPo8fTU9I2cfA9xYZEiiQ3OkSvy5k_nq6PkJ_Yhyri0MnKeG9SCg6wzp3LU4PeuHlY3QB0bcJd-D4zNPGb3AALFJHTOU0DHbEwT0BPFZQgh3uvXMtWI25Za" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=vsc55/docker-PyWebScrapBook&type=date&legend=top-left&sealed_token=ckw3Qetu_FDo4yK_r7ARz35VaJ1SYXUk4kxaSC8_hU6Up3oJfduWGI0BJK-6efLlJ5d_XpPo8fTU9I2cfA9xYZEiiQ3OkSvy5k_nq6PkJ_Yhyri0MnKeG9SCg6wzp3LU4PeuHlY3QB0bcJd-D4zNPGb3AALFJHTOU0DHbEwT0BPFZQgh3uvXMtWI25Za" />
+ </picture>
+</a>

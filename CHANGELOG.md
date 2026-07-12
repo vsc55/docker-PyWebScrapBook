@@ -24,10 +24,11 @@ Targets **WebScrapBook 2.9.0** on **python:3.14-alpine**.
   `su-exec` after the entrypoint fixes the volume ownership).
 - Documented the environment variables in the `Dockerfile` and both
   `docker-compose*` examples.
-- Expanded the `README.md`: data layout, extension usage, Docker Compose
+- Expanded the `README.md`: status badges, data layout, extension usage, Docker Compose
   example, configuration table, subpath hosting (reverse proxy +
-  `WSB_ALLOWED_X_PREFIX`), image tags, update steps, and the version/arch
-  tables aligned with the CI workflow.
+  `WSB_ALLOWED_X_PREFIX`), image tags, a "Versioning & releases" section
+  (product vs image version), update steps, the version/arch tables aligned
+  with the CI workflow, and a Star History chart.
 - CI: `upstream-release` workflow that polls PyPI daily and, when a new
   WebScrapBook version appears, creates the matching tag (which triggers the
   `ci` build & publish). Requires a `TOKEN_WEBSCRAPBOOK` PAT secret so the tag
@@ -54,6 +55,11 @@ Targets **WebScrapBook 2.9.0** on **python:3.14-alpine**.
 - CI: every push to `master` publishes a rolling `ghcr.io/<owner>/webscrapbook:test`
   image (amd64), after the smoke test passes. Docker Hub still receives tagged
   releases only.
+- CI: on a version tag, a GitHub Release is created (named after the tag) with
+  `docker pull` instructions (Docker Hub + GHCR) and the upstream WebScrapBook
+  changelog for that version. The image's own changelog entry (its separate
+  version) is appended only when `CHANGELOG.md` changed since the previous tag,
+  i.e. when the image itself changed for this release.
 
 ### Fixed
 
