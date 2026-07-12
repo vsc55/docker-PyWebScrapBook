@@ -72,6 +72,11 @@ The `config.ini` is generated on the first run, and the container runs as an
 unprivileged `wsb` user, so `/data` is `chown`ed to that user on first start.
 If you use a bind mount, that host directory will change ownership accordingly.
 
+> ⚠️ **Important — migrating from an old (root-based) image:** existing data
+> stays owned by `root`, and the unprivileged `wsb` user cannot write it (new
+> captures, edits and backups would fail). Set **`WSB_FIX_PERMS=true`** once and
+> restart to force a recursive `chown` of `/data`, then remove the variable.
+
 ## Usage (connect the extension):
 1. Start the container and open `http://<host>:8080/` in a browser to confirm
    the server responds.
@@ -157,6 +162,9 @@ docker pull vsc55/webscrapbook:latest
 docker rm -f PyWebScrapBook
 # then re-create the container (see "Create Container")
 ```
+
+> ⚠️ Upgrading from a version that ran as `root`? See the **`WSB_FIX_PERMS`**
+> note under [Data layout](#data-layout) — you must fix `/data` ownership once.
 
 ## Version PyWebScrapBook and Python:
 

@@ -22,6 +22,12 @@ Targets **WebScrapBook 2.9.0** on **python:3.14-alpine**.
   `WSB_AUTH_USER` is unset).
 - The server now runs as an unprivileged `wsb` user (privileges are dropped with
   `su-exec` after the entrypoint fixes the volume ownership).
+- `WSB_FIX_PERMS=true` forces a recursive `chown` of `/data` on boot, to migrate
+  a volume created by an older root-based image without deleting `config.ini`.
+- Timestamped, traceable startup logging across `entrypoint.sh`, `run_wsb.sh`
+  and `apply_config.py` (each step is logged). Secrets are never logged — only
+  variable names and the auth permission level, never usernames/passwords/tokens
+  or command arguments.
 - Documented the environment variables in the `Dockerfile` and both
   `docker-compose*` examples.
 - Expanded the `README.md`: status badges, data layout, extension usage, Docker Compose

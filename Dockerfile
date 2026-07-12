@@ -30,6 +30,9 @@ RUN chmod +x /*.sh
 #
 #   Runtime:
 #     HTTP_PORT            TCP port the server listens on (also the EXPOSE'd port).
+#     WSB_FIX_PERMS        "true" forces a recursive chown of /data to the wsb
+#                          user (to migrate a volume from an old root-based
+#                          image). Set once, restart, then remove.
 #
 #   Runtime - authentication ([auth]); enabled when WSB_AUTH_USER is set:
 #     WSB_AUTH_USER        HTTP Basic auth user name.
