@@ -44,7 +44,12 @@ jobs:
           VER: ${{ steps.upstream.outputs.version }}
           ACTOR: ${{ github.actor }}
           ACTOR_ID: ${{ github.actor_id }}
+          TOKEN: ${{ secrets.TOKEN_WEBSCRAPBOOK }}
         run: |
+          if [ -z "$TOKEN" ]; then
+            echo "::error::TOKEN_WEBSCRAPBOOK is empty — add it as a repository Actions secret (a PAT with contents:write / repo scope)."
+            exit 1
+          fi
           if git rev-parse -q --verify "refs/tags/$VER" >/dev/null; then
             echo "Tag $VER already exists — nothing to do."
             exit 0
